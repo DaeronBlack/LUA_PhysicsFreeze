@@ -1,10 +1,10 @@
-function GM:PhysgunPickup(pl, ent)
-	if(ent:IsPlayer())then
-		print("Entity is player!")
-		ent:SelectWeapon("keys")
+function PlayerPickup( pl, ent )
+	if ( ent:IsPlayer() ) then
+		print( "Entity is player!" )
+		ent:SelectWeapon( "keys" )
 	else
-		print("Entity is not player!")
+		print( "Entity is not player!" )
 		return false
 	end
 end
-	
+hook.Add( "PhysgunPickup", "Switch to Keys", PlayerPickup )

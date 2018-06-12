@@ -1,5 +1,5 @@
 function PlayerPickup( pl, ent )
-	if ( ent:IsPlayer() ) then
+	if ( ent == pl ) ) then
 		print( "Entity is player!" )
 		ent:SelectWeapon( "keys" )
 	else

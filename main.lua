@@ -20,7 +20,7 @@ hook.add("PhysgunDrop", "ply_physgunfreeze", function(ply, ent)
 
     if(ply:KeyDown(IN_ATTACK2)) then
         ent:Freeze(true)
-        ent:SelectWeapon("Keys")
+        ent:SelectWeapon("keys")
         ent:SetNWInt(GODMODE, 1)
         ent:DisallowSpawning( not should_unfreeze)
         ulx.setNoDie(ent, not should_unfreeze)

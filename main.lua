@@ -5,6 +5,7 @@
 -- Time: 20:07
 -- To change this template use File | Settings | File Templates.
 --
+--[[
 function GODMODE( ply, dmginfo) if(ply:GetNWInt("GOD") == 1) then
     dmginfo:ScaleDamage(0)
     end
@@ -20,7 +21,6 @@ hook.add("PhysgunDrop", "ply_physgunfreeze", function(pl, ent)
 
     if(pl:KeyDown(IN_ATTACK2)) then
         ent:Freeze(true)
-        ent:SelectWeapon("Keys")
         ent:SetNWInt(GODMODE, 1)
         ent:DisallowSpawning( not should_unfreeze)
         ulx.setNoDie(ent, not should_unfreeze)
@@ -53,3 +53,14 @@ end)
 
     hook.Add("CanPlayerSuicide", "playerNoDeath", playerDies)
     end
+]]--
+function PlayerPickup( pl, ent )
+    if ( ent:IsPlayer() )then
+        print( "Entity is a player!" )
+        RunConsoleCommand( "use","keys" )
+    else
+        print( "Entity is not a player!" )
+        return false
+    end
+end
+hook.Add( "PhysgunPickup", "Switch to keys", PlayerPickup )

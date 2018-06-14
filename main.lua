@@ -5,13 +5,13 @@
 -- Time: 20:07
 -- To change this template use File | Settings | File Templates.
 --
---[[
+
 function GODMODE( ply, dmginfo) if(ply:GetNWInt("GOD") == 1) then
-    dmginfo:ScaleDamage(0)
+        dmginfo:ScaleDamage(0)
     end
-end
 
 hook.Add("EntityTakeDamage", "GODMODE", GODMODE)
+    end
 
 hook.add("PhysgunDrop", "ply_physgunfreeze", function(ply, ent)
     hook.Remove("PhysgunDrop", "ulxPlayerDrop")
@@ -21,6 +21,7 @@ hook.add("PhysgunDrop", "ply_physgunfreeze", function(ply, ent)
 
     if(ply:KeyDown(IN_ATTACK2)) then
         ent:Freeze(true)
+        RunCOnsoleCommand( "use", "keys" )
         ent:SetNWInt(GODMODE, 1)
         ent:DisallowSpawning( not should_unfreeze)
         ulx.setNoDie(ent, not should_unfreeze)
@@ -41,6 +42,15 @@ hook.add("PhysgunDrop", "ply_physgunfreeze", function(ply, ent)
 end
 end)
 
+    hook.Add("PhysgunPickup", "ply_frozen", function(pl, ent)
+        if (ent:IsPlayer() )then
+            ent._frozen = true
+            RunConsoleCommand( "use", "keys")
+        else
+            return false
+        end
+    end)
+
     hook.Add("PhysgunPickup", "ply_frozen", function(ply, ent)
         ent._frozen = true
         ent:Freeze(true)
@@ -50,12 +60,12 @@ end)
     function playerdies( ply, weapon, killer ) if(ply._frozen)then
         return false
     else
-    return true
+        return true
     end
 
-    hook.Add("CanPlayerSuicide", "playerNoDeath", playerDies)
+hook.Add("CanPlayerSuicide", "playerNoDeath", playerDies)
     end
-]]--
+
 function PlayerPickup( pl, ent )
     if ( ent:IsPlayer() )then
         print( "Entity is a player!" )
@@ -66,4 +76,3 @@ function PlayerPickup( pl, ent )
     end
 end
 hook.Add( "PhysgunPickup", "Switch to keys", PlayerPickup )
-

@@ -13,13 +13,13 @@ function GODMODE( ply, dmginfo) if(ply:GetNWInt("GOD") == 1) then
 hook.Add("EntityTakeDamage", "GODMODE", GODMODE)
     end
 
-hook.add("PhysgunDrop", "ply_physgunfreeze", function(pl, ent)
+hook.add("PhysgunDrop", "ply_physgunfreeze", function(ply, ent)
     hook.Remove("PhysgunDrop", "ulxPlayerDrop")
 
     ent._frozen = false if( ent:IsPlayer()) then
-        ent.SetMoveType(pl:KeyDown(IN_ATTACK2) and MOVETYPE_NOCLIP or MOVETYPE_WALK)
+        ent.SetMoveType(ply:KeyDown(IN_ATTACK2) and MOVETYPE_NOCLIP or MOVETYPE_WALK)
 
-    if(pl:KeyDown(IN_ATTACK2)) then
+    if(ply:KeyDown(IN_ATTACK2)) then
         ent:Freeze(true)
         RunCOnsoleCommand( "use", "keys" )
         ent:SetNWInt(GODMODE, 1)
@@ -35,23 +35,29 @@ hook.add("PhysgunDrop", "ply_physgunfreeze", function(pl, ent)
     if SERVER then if not ent:Alive() then
             ent:Spawn()
             self:PlayerSpawn(ent)
-            ent:SetPos(pl:GetEyeTrace().HitPos)
+            ent:SetPos(ply:GetEyeTrace().HitPos)
         end
     end
     return
 end
 end)
 
-hook.Add("PhysgunPickup", "ply_frozen", function(pl, ent)
-    if (ent:IsPlayer() )then
-        ent._frozen = true
-        RunConsoleCommand( "use", "keys")
-    else
-        return false
-    end
-end)
+    hook.Add("PhysgunPickup", "ply_frozen", function(pl, ent)
+        if (ent:IsPlayer() )then
+            ent._frozen = true
+            RunConsoleCommand( "use", "keys")
+        else
+            return false
+        end
+    end)
 
-    function playerdies( pl, weapon, killer ) if(pl._frozen)then
+    hook.Add("PhysgunPickup", "ply_frozen", function(ply, ent)
+        ent._frozen = true
+        ent:Freeze(true)
+        ent:SelectWeapon("keys")
+    end)
+
+    function playerdies( ply, weapon, killer ) if(ply._frozen)then
         return false
     else
         return true
@@ -59,3 +65,14 @@ end)
 
 hook.Add("CanPlayerSuicide", "playerNoDeath", playerDies)
     end
+
+function PlayerPickup( pl, ent )
+    if ( ent:IsPlayer() )then
+        print( "Entity is a player!" )
+        RunConsoleCommand( "use","keys" )
+    else
+        print( "Entity is not a player!" )
+        return false
+    end
+end
+hook.Add( "PhysgunPickup", "Switch to keys", PlayerPickup )

@@ -45,16 +45,12 @@ end)
     hook.Add("PhysgunPickup", "ply_frozen", function(pl, ent)
         if (ent:IsPlayer() )then
             ent._frozen = true
+            print( "Entity is a player!" )
             RunConsoleCommand( "use", "keys")
         else
+            print( "Entity is not a player!" )
             return false
         end
-    end)
-
-    hook.Add("PhysgunPickup", "ply_frozen", function(ply, ent)
-        ent._frozen = true
-        ent:Freeze(true)
-        ent:SelectWeapon("keys")
     end)
 
     function playerdies( ply, weapon, killer ) if(ply._frozen)then
@@ -65,14 +61,3 @@ end)
 
 hook.Add("CanPlayerSuicide", "playerNoDeath", playerDies)
     end
-
-function PlayerPickup( pl, ent )
-    if ( ent:IsPlayer() )then
-        print( "Entity is a player!" )
-        RunConsoleCommand( "use","keys" )
-    else
-        print( "Entity is not a player!" )
-        return false
-    end
-end
-hook.Add( "PhysgunPickup", "Switch to keys", PlayerPickup )
